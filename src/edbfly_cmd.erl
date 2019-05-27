@@ -92,17 +92,31 @@ run_migrations(Migrations, Db) ->
 
 
 sort_migrations(Migrations) ->
+    %% filter out sql files that does not match filename convention
+    MigrationsWithNumbers = [ {extract_number(filename:basename(F)), F} || F <- Migrations ],
+    FilterMigrations = lists:filter( fun({N, _F}) ->
+                                             N =/= -1
+                                     end, MigrationsWithNumbers),
+
+    %% Sort the migration files in ascending order
     SortFn =
         fun(A, B) ->
-                ADigit = extract_number(filename:basename(A)),
-                BDigit = extract_number(filename:basename(B)),
+                {ADigit, _} = A,
+                {BDigit, _} = B,
                 ADigit < BDigit
         end,
-    {ok, lists:sort(SortFn, Migrations)}.
+    SortedMigrations = lists:sort(SortFn, FilterMigrations),
+
+    %% Extract just the filename from sorted list
+    {ok, [F || {_, F} <- SortedMigrations]}.
 
 extract_number(S) ->
-    [_, I, _] = re:split(S, ".*_(\\d+).sql"),
-    binary_to_integer(I).
+    case re:split(S, ".*_(\\d+).sql") of
+        [_, I, _] ->
+            binary_to_integer(I);
+        _ ->
+            -1
+    end.
 
 migrations_transaction_fn(Db) ->
     case epgsql:equery(Db, ?LOCK_TABLE_QUERY) of

@@ -1,0 +1,1 @@
+CREATE TABLE bootstrap( id SERIAL PRIMARY KEY );
