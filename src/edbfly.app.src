@@ -1,0 +1,19 @@
+{application, edbfly,
+ [{description, "Flyway like migration tool"},
+  {vsn, "1.0.0"},
+  {registered, []},
+  {applications,
+   [kernel,
+    stdlib,
+    epgsql,
+    getopt,
+    yamerl,
+    iso8601
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
