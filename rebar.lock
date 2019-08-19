@@ -1,18 +1,28 @@
 {"1.1.0",
-[{<<"epgsql">>,
+[{<<"cf">>,{pkg,<<"cf">>,<<"0.3.1">>},2},
+ {<<"epgsql">>,
   {git,"https://github.com/epgsql/epgsql.git",
        {ref,"b3138f76759750ab5e6202766cb39acd88c8ff54"}},
   0},
+ {<<"erlware_commons">>,{pkg,<<"erlware_commons">>,<<"1.3.1">>},1},
  {<<"getopt">>,{pkg,<<"getopt">>,<<"1.0.1">>},0},
- {<<"iso8601">>,
-  {git,"https://github.com/erlsci/iso8601.git",
-       {ref,"fdb0fd12d729c53f4ae6f8c2f893fd6698b8b10e"}},
+ {<<"jsone">>,
+  {git,"https://github.com/sile/jsone.git",
+       {ref,"b8109a607ec988b334dcfeed850cfcaac66e487f"}},
   0},
+ {<<"qdate">>,
+  {git,"https://github.com/choptastic/qdate",
+       {ref,"ed00a606f3deca1b5e82de72249436c98faaa3a0"}},
+  0},
+ {<<"qdate_localtime">>,{pkg,<<"qdate_localtime">>,<<"1.1.0">>},1},
  {<<"yamerl">>,
   {git,"https://github.com/yakaz/yamerl.git",
        {ref,"4e5a54a5a4a0cd9dc8ee30c8356642e9a2c3a443"}},
   0}]}.
 [
 {pkg_hash,[
- {<<"getopt">>, <<"C73A9FA687B217F2FF79F68A3B637711BB1936E712B521D8CE466B29CBF7808A">>}]}
+ {<<"cf">>, <<"5CB902239476E141EA70A740340233782D363A31EEA8AD37049561542E6CD641">>},
+ {<<"erlware_commons">>, <<"0CE192AD69BC6FD0880246D852D0ECE17631E234878011D1586E053641ED4C04">>},
+ {<<"getopt">>, <<"C73A9FA687B217F2FF79F68A3B637711BB1936E712B521D8CE466B29CBF7808A">>},
+ {<<"qdate_localtime">>, <<"5F6C3ACF10ECC5A7E2EFA3DCD2C863102B962188DBD9E086EC01D29FE029DA29">>}]}
 ].

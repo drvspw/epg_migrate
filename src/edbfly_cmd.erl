@@ -54,24 +54,39 @@ exec_cmd(Db, ?CMD_MIGRATE) ->
 exec_cmd(Db, ?CMD_LIST) ->
     {ok, _, R} = epgsql:equery(Db, ?LIST_MIGRATIONS_QUERY),
     lists:foreach( fun({N,S,T}) ->
-                           io:format("~-50.s ~-10.s ~-50.s ~n", [N,S,iso8601:format(T)])
+                           io:format("~-50.s ~-10.s ~-50.s ~n", [N,S,qdate:format(T)])
                        end, R),
     ok = epgsql:close(Db).
 
 get_db_opts(Config) ->
-    H = proplists:get_value("host", Config),
-    P = proplists:get_value("port", Config),
-    DB = proplists:get_value("database", Config),
-    U = proplists:get_value("user", Config),
-    PWD = proplists:get_value("password", Config),
-    S = proplists:get_value("schema", Config, ?DEFAULT_SCHEMA),
-    #{host => H,
-      port => P,
-      database => DB,
-      username => U,
-      password => PWD,
-      timeout => 4000,
-      schema => S}.
+    #{"host" := H, "port" := P, "database" := DB,
+      "user" := U, "password" := PWDConfig} = Config,
+    S = maps:get("schema", Config, ?DEFAULT_SCHEMA),
+    PWD = extract_password( maps:from_list(PWDConfig)),
+
+    #{host => H, port => P, database => DB, username => U,
+      password => PWD, timeout => 4000, schema => S}.
+
+extract_password(#{"type" := "text", "value" := V}) ->
+    V;
+extract_password(#{"type" := "aws_secret", "secret_id" := SecretId, "aws_credentials" := AwsCred}) ->
+    extract_password(maps:from_list(AwsCred), SecretId).
+
+extract_password(#{"iam_ec2_role" := Role, "region" := Region}, SecretId) ->
+    extract_password(#{iam_ec2_role => Role, region => Region}, SecretId);
+
+extract_password(#{"access_key_id" := AK, "secret_access_key" := SK, "region" := R}, SecretId) ->
+    extract_password(#{access_key_id => AK, secret_access_key => SK, region => R}, SecretId);
+
+extract_password(CredentialsMap, SecretId) ->
+    #{secret_string := Secret} = edbfly_aws:get_secret(CredentialsMap, SecretId),
+    try
+        #{<<"password">> := V} = jsone:decode(Secret),
+        V
+    catch
+        _ : _ ->
+            Secret
+    end.
 
 run_migrations(Migrations, Db) ->
     %% store migrations in env

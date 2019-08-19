@@ -1,7 +1,33 @@
+#- host: "localhost"
+#  port: 5432
+#  database: "db"
+#  schema: "public"
+#  user: "user"
+#  password:
+#    type: text
+#    value: "..."
+
 - host: "localhost"
   port: 5432
-  database: "xaptum"
-  user: "xapp_user"
-  password: "..."
-  # optional attribute. defaults to "public"
+  database: "db"
   schema: "public"
+  user: "user"
+  password:
+    type: aws_secret
+    secret_id: "secret-id"
+    aws_credentials:
+      access_key_id: "..."
+      secret_access_key: "..."
+      region: "us-east-1"
+
+#- host: "localhost"
+#  port: 5432
+#  database: "db"
+#  schema: "public"
+#  user: "user"
+#  password:
+#    type: aws_secret
+#    secret_id: "another-secret-id"
+#    aws_credentials:
+#      iam_ec2_role: "..."
+#      region: "us-east-1"

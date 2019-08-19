@@ -8,7 +8,10 @@
     epgsql,
     getopt,
     yamerl,
-    iso8601
+    qdate,
+    jsone,
+    crypto,
+    inets
    ]},
   {env,[]},
   {modules, []},

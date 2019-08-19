@@ -5,7 +5,7 @@
 
 -include("edbfly.hrl").
 
--define(VSN, "1.0.1").
+-define(VSN, "1.2.0").
 %%====================================================================
 %% API functions
 %%====================================================================
@@ -51,8 +51,9 @@ execute_migration_command(Command, Options) ->
         Config = parse_options(Options),
         edbfly_cmd:exec(Command, Config)
     catch
-        _ : Reason ->
+        _ : Reason : StackTrace ->
             io:format("ERROR: ~p~n", [Reason]),
+            erlang:display(StackTrace),
             erlang:halt(1)
     end.
 
@@ -66,9 +67,9 @@ parse_options(Options) ->
     [Mappings] = yamerl_constr:file(ConfigFile),
 
     %% Get Db Config
-    [Config] = Mappings,
+    [DbConfig] = Mappings,
 
-    Config.
+    maps:from_list(DbConfig).
 
 option_spec_list() ->
     ConfigHelp = "Provide the path to yml configuration file. "
