@@ -36,6 +36,12 @@ exec(Cmd, Config) ->
 %%====================================================================
 %% private functions
 %%====================================================================
+format_datetime({{Year, Month, Day}, {Hour, Minute, Sec}}) when is_float(Sec) ->
+    format_datetime({{Year, Month, Day}, {Hour, Minute, round(Sec)}});
+
+format_datetime(T) ->
+    qdate:format("Y-m-d H:i:s TZ", T).
+
 exec_cmd(Db, ?CMD_MIGRATE) ->
     %% Get migration files and sort them
     {ok, Path} = application:get_env(?APP_NAME, ?APP_ENV_SQL_DIR),
@@ -54,7 +60,7 @@ exec_cmd(Db, ?CMD_MIGRATE) ->
 exec_cmd(Db, ?CMD_LIST) ->
     {ok, _, R} = epgsql:equery(Db, ?LIST_MIGRATIONS_QUERY),
     lists:foreach( fun({N,S,T}) ->
-                           io:format("~-50.s ~-10.s ~-50.s ~n", [N,S,qdate:format(T)])
+                           io:format("~-50.s ~-10.s ~-50.s ~n", [N,S,format_datetime(T)])
                        end, R),
     ok = epgsql:close(Db).
 
