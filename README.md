@@ -1,4 +1,4 @@
-### edbfly
+### edbfly [![Build Status](https://travis-ci.org/drvspw/edbfly.svg?branch=master)](https://travis-ci.org/drvspw/edbfly)
 `escript` application for postgresql migrations
 
 ### Prerequisites

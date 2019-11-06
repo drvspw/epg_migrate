@@ -1,0 +1,16 @@
+language: erlang
+
+notifications:
+  email: v@drvs.pw
+
+otp_release:
+  - 21.3.8
+
+
+jobs:
+  include:
+    - stage: Compile edbfly
+      script: make compile
+
+    - stage: Build Release
+      script: make release
